@@ -1,11 +1,11 @@
-# GCX-GCD Exam Simulator
+# dev-prep
 
-A practice exam for the **Genesys Cloud CX: Developer (GCX-GCD)** certification. It runs entirely in the browser with no build step and no server.
+A practice test for a developer certification exam. It runs entirely in the browser with no build step and no server.
 
 ## Run it
 
 - **Locally:** open `index.html` in Chrome or Firefox.
-- **GitHub Pages:** Settings → Pages → Deploy from branch → `main` / root. The site will be at `https://jcliff01.github.io/gcd-prep/`.
+- **GitHub Pages:** Settings → Pages → Deploy from branch → `main` / root.
 
 ## Features
 
@@ -48,5 +48,5 @@ Questions live in `questions.js`. Each one looks like this:
 
 ## Notes
 
-- The questions are written from a study guide checked against the Genesys Developer Center. They are practice material, not real exam questions.
-- The default pass mark of 70% is a practice target. Check the official pass mark with Genesys.
+- The questions are practice material written from a study guide, not real exam questions.
+- The default pass mark of 70% is a practice target. Check the official pass mark for your exam.

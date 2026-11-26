@@ -1,4 +1,4 @@
-// Question bank for the GCX-GCD exam simulator.
+// Question bank for dev-prep.
 // Each question: id, topic, q (text), optional code, options, answer (indexes of correct options), explain.
 // Questions with more than one answer index are "choose N" questions.
 window.TOPICS = [
@@ -15,14 +15,14 @@ window.QUESTIONS = [
   // ---------------- Platform & API ----------------
   {
     id: "p1", topic: "Platform & API",
-    q: "A client sends a request without saying which content type it wants back. What format does the Genesys Cloud Platform API respond in?",
+    q: "A client sends a request without saying which content type it wants back. What format does the Platform API respond in?",
     options: ["XML", "JSON", "CSV", "YAML"],
     answer: [1],
     explain: "The Platform API is a REST API that returns JSON by default.",
   },
   {
     id: "p2", topic: "Platform & API",
-    q: "Genesys needs to make a change to the Platform API that is not backwards compatible. What is the policy whenever possible?",
+    q: "The vendor needs to make a change to the Platform API that is not backwards compatible. What is the policy whenever possible?",
     options: [
       "Ship it in v2 immediately with release notes",
       "Defer it to the next major API version",
@@ -46,7 +46,7 @@ window.QUESTIONS = [
   },
   {
     id: "p4", topic: "Platform & API",
-    q: "Which FOUR change types are defined in the Genesys Cloud API Change Management Policy?",
+    q: "Which FOUR change types are defined in the API Change Management Policy?",
     options: ["Non-breaking", "Breaking", "Emergency", "Deprecation", "Minor bug", "Cosmetic"],
     answer: [0, 1, 2, 3],
     explain: "The policy defines Non-breaking, Breaking, Emergency (rare, for security or stability; may be breaking or not) and Deprecation changes.",
@@ -76,11 +76,11 @@ window.QUESTIONS = [
     options: [
       "Only calls made with your organization's own OAuth clients",
       "Calls from your OAuth clients, custom apps, integrations and AppFoundry apps",
-      "All calls, including the Genesys Cloud desktop and web apps",
+      "All calls, including the vendor's own desktop and web apps",
       "Only calls from AppFoundry apps",
     ],
     answer: [1],
-    explain: "Your OAuth clients plus custom, third-party and AppFoundry apps count. Genesys Cloud's own web, desktop and mobile apps, and Genesys Cloud for Chrome, Firefox, Salesforce and Zendesk, do not.",
+    explain: "Your OAuth clients plus custom, third-party and AppFoundry apps count. The platform's own web, desktop and mobile apps, and its Chrome, Firefox, Salesforce and Zendesk clients, do not.",
   },
   {
     id: "p8", topic: "Platform & API",
@@ -96,7 +96,7 @@ window.QUESTIONS = [
   },
   {
     id: "p9", topic: "Platform & API",
-    q: "Which THREE of these are languages or platforms with an official Genesys Cloud Platform SDK?",
+    q: "Which THREE of these are languages or platforms with an official Platform SDK?",
     options: ["JavaScript", "Java", "Python", "C", "COBOL"],
     answer: [0, 1, 2],
     explain: "Official SDKs include JavaScript, Java, .NET, Python, Go and iOS. There is no C or COBOL SDK.",
@@ -110,14 +110,14 @@ window.QUESTIONS = [
   },
   {
     id: "p11", topic: "Platform & API",
-    q: "You call Genesys Cloud support about a problem. Which identifier tells them which organization you are?",
+    q: "You call platform support about a problem. Which identifier tells them which organization you are?",
     options: ["Organization ID", "Company name", "Your user ID", "OAuth client ID"],
     answer: [0],
-    explain: "The Organization ID uniquely identifies your Genesys Cloud org.",
+    explain: "The Organization ID uniquely identifies your org.",
   },
   {
     id: "p12", topic: "Platform & API",
-    q: "Which TWO browsers are fully supported for the Genesys Cloud web app (current and previous major versions)?",
+    q: "Which TWO browsers are fully supported for the web app (current and previous major versions)?",
     options: ["Chrome", "Firefox", "Safari", "Internet Explorer", "Opera"],
     answer: [0, 1],
     explain: "Chrome and Firefox are fully supported. Safari works with limits (for example no WebRTC phone or screen share). IE and Opera are not supported.",
@@ -323,7 +323,7 @@ window.QUESTIONS = [
     q: "Which TWO statements about recordings are true?",
     options: [
       "Recordings can be downloaded programmatically with the Recording APIs",
-      "Genesys keeps every recording and its metadata forever",
+      "The platform keeps every recording and its metadata forever",
       "Recordings can be exported to cloud storage such as AWS S3 through an integration",
       "No cloud storage integrations are allowed",
     ],
@@ -339,7 +339,7 @@ window.QUESTIONS = [
   },
   {
     id: "c14", topic: "Conversations API",
-    q: "In Genesys Cloud, what is a 'conversation'?",
+    q: "On the platform, what is a 'conversation'?",
     options: [
       "Only a voice call between two people",
       "An interaction between participants over one or more media, holding end-to-end data for all of them",
@@ -547,14 +547,14 @@ window.QUESTIONS = [
   },
   {
     id: "t4", topic: "Telephony",
-    q: "True or false: you can combine Genesys Cloud Voice and BYOC Cloud in the same organization.",
+    q: "True or false: you can combine Cloud Voice and BYOC Cloud in the same organization.",
     options: ["True", "False"],
     answer: [0],
-    explain: "True. Orgs can mix Genesys-supplied carrier service with their own carriers.",
+    explain: "True. Orgs can mix vendor-supplied carrier service with their own carriers.",
   },
   {
     id: "t5", topic: "Telephony",
-    q: "Genesys Cloud combines the routing information from all sites into what?",
+    q: "The platform combines the routing information from all sites into what?",
     options: ["A number plan", "A trunk", "An Edge", "An outbound route"],
     answer: [0],
     explain: "Number plans define how many and which digits are needed to route calls, across all sites.",
@@ -604,7 +604,7 @@ window.QUESTIONS = [
       "Its exact GPS coordinates",
       "Photos of all users there",
       "General details such as address, floors and contact information",
-      "Admin rights in Genesys Cloud",
+      "Admin rights on the platform",
     ],
     answer: [2, 3],
     explain: "Locations need general site information, and you need admin rights to create them.",
@@ -745,7 +745,7 @@ window.QUESTIONS = [
   },
   {
     id: "k16", topic: "Contact Center",
-    q: "Which is NOT a Genesys Cloud Collaborate feature?",
+    q: "Which is NOT a Collaborate feature?",
     options: ["Text chat", "AI chat", "Video chat", "Content management"],
     answer: [1],
     explain: "Collaborate includes text chat, video chat and content management.",
@@ -766,7 +766,7 @@ window.QUESTIONS = [
   },
   {
     id: "k19", topic: "Contact Center",
-    q: "What is a queue in Genesys Cloud?",
+    q: "What is a queue on the platform?",
     options: [
       "A group of agents with similar skills that interactions are routed to",
       "A list of scheduled callbacks only",

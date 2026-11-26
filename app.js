@@ -4,8 +4,8 @@
   const QUESTIONS = window.QUESTIONS || [];
   const TOPICS = window.TOPICS || [];
   const BY_ID = Object.fromEntries(QUESTIONS.map((q) => [q.id, q]));
-  const STATE_KEY = "gcd-sim-state-v1";
-  const HISTORY_KEY = "gcd-sim-history-v1";
+  const STATE_KEY = "dev-prep-state-v1";
+  const HISTORY_KEY = "dev-prep-history-v1";
 
   let state = null;
   let timerHandle = null;
