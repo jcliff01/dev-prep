@@ -74,6 +74,7 @@ select, input[type=number] {
 .btn.ghost { background: transparent; }
 .btn.danger { background: #fff; color: var(--bad); border-color: #e7b7b1; }
 .btn.danger:hover { background: var(--bad-bg); }
+.btn.small { padding: .25rem .65rem; font-size: .85rem; }
 .btn.big { padding: .75rem 1.5rem; font-size: 1.05rem; }
 .btn.full { width: 100%; margin-top: 1rem; }
 .btn.on { background: var(--warn-bg); border-color: var(--warn); color: var(--warn); }

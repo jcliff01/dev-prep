@@ -6,6 +6,7 @@
   const BY_ID = Object.fromEntries(QUESTIONS.map((q) => [q.id, q]));
   const STATE_KEY = "dev-prep-state-v1";
   const HISTORY_KEY = "dev-prep-history-v1";
+  const HISTORY_MAX = 10;
 
   let state = null;
   let timerHandle = null;
@@ -82,17 +83,28 @@
     show("setup");
   }
 
+  const canReview = (h) => !!(h.exam && h.exam.ids && h.exam.ids.every((id) => BY_ID[id]));
+
   function renderHistory() {
     const hist = load(HISTORY_KEY, []);
     $("history").classList.toggle("hidden", hist.length === 0);
     $("history-body").innerHTML = hist
-      .slice(0, 10)
+      .slice(0, HISTORY_MAX)
       .map(
-        (h) =>
+        (h, i) =>
           `<tr><td>${esc(new Date(h.date).toLocaleString())}</td><td>${h.total}</td><td>${h.pct}%</td>` +
-          `<td><span class="status ${h.passed ? "ok" : "bad"}">${h.passed ? "Pass" : "Fail"}</span></td></tr>`
+          `<td><span class="status ${h.passed ? "ok" : "bad"}">${h.passed ? "Pass" : "Fail"}</span></td>` +
+          `<td>${canReview(h) ? `<button class="btn small" data-h="${i}">Review</button>` : `<span class="muted small">—</span>`}</td></tr>`
       )
       .join("");
+  }
+
+  // Open a past attempt on the results screen (read-only; nothing is saved).
+  function reviewPast(i) {
+    const h = load(HISTORY_KEY, [])[i];
+    if (!h || !canReview(h)) return;
+    state = Object.assign({}, h.exam, { current: 0, finished: true, past: true });
+    renderResults(computeResults());
   }
 
   function selectedTopics() {
@@ -295,8 +307,16 @@
 
     const r = computeResults();
     const hist = load(HISTORY_KEY, []);
-    hist.unshift({ date: state.finishedAt, total: r.total, pct: r.pct, passed: r.passed });
-    save(HISTORY_KEY, hist.slice(0, 20));
+    hist.unshift({
+      date: state.finishedAt, total: r.total, pct: r.pct, passed: r.passed,
+      // Full attempt so it can be reviewed later from the start screen.
+      exam: {
+        ids: state.ids, order: state.order, answers: state.answers,
+        flagged: state.flagged, assisted: state.assisted, passMark: state.passMark,
+        startedAt: state.startedAt, finishedAt: state.finishedAt, timedOut: state.timedOut,
+      },
+    });
+    save(HISTORY_KEY, hist.slice(0, HISTORY_MAX));
     remove(STATE_KEY);
     renderResults(r);
   }
@@ -335,7 +355,8 @@
     $("score-big").textContent = `${r.pct}%`;
     $("score-detail").textContent =
       `${r.correct} of ${r.total} correct · pass mark ${state.passMark}%` +
-      (state.timedOut ? " · time ran out" : "");
+      (state.timedOut ? " · time ran out" : "") +
+      (state.past ? ` · taken ${new Date(state.finishedAt).toLocaleString()}` : "");
 
     const stats = [
       ["Correct", r.correct],
@@ -475,6 +496,10 @@
       if (ids.length) startExam(shuffle(ids));
     });
     $("new-btn").addEventListener("click", renderSetup);
+    $("history-body").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-h]");
+      if (b) reviewPast(Number(b.dataset.h));
+    });
 
     // Keyboard: arrows to move, 1-9 to pick an option.
     document.addEventListener("keydown", (e) => {

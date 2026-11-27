@@ -15,7 +15,7 @@ A practice test for a developer certification exam. It runs entirely in the brow
 - **Flag** questions to come back to, and use the question grid to jump around.
 - Results show pass/fail, your score by topic, which topics to focus on, and a full review you can filter (incorrect, answer shown, flagged).
 - **Retake incorrect questions** starts a new exam from just the ones you missed.
-- Progress is saved in the browser, so you can close the tab and resume later. Recent attempts are kept on the start screen.
+- Progress is saved in the browser, so you can close the tab and resume later. Your last 10 exams are kept on the start screen; click **Review** on any of them to reopen its results and full answer review.
 - Keyboard: ← / → to move between questions, 1–9 to pick an option.
 
 ## Topics
