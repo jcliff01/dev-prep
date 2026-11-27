@@ -3,22 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>dev-prep</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">dev-prep <span>Dev exam practice</span></div>
-    <div class="topbar-right">
-      <span id="timer" class="timer hidden" aria-live="polite"></span>
-    </div>
+    <button type="button" id="brand" class="brand">dev-prep</button>
+    <nav id="nav" class="nav" aria-label="Sections">
+      <button type="button" class="nav-link" data-view="setup">Practice</button>
+      <button type="button" class="nav-link" data-view="history">History</button>
+    </nav>
+    <span id="timer" class="timer hidden" role="timer" aria-label="Time left"></span>
   </header>
 
   <main id="app">
     <!-- Setup screen -->
     <section id="setup" class="screen">
-      <h1>Dev exam practice test</h1>
-      <p class="lead">A simulated test. Answer each question, use <strong>Show answer</strong> if you get stuck, and see your score by topic at the end.</p>
+      <h1>Practice exam</h1>
+      <p class="lead">Answer each question, use <strong>Show answer</strong> if you get stuck, and see your score by topic at the end.</p>
 
       <div id="resume-box" class="card resume hidden">
         <div>
@@ -26,37 +29,40 @@
           <div class="muted" id="resume-detail"></div>
         </div>
         <div class="row-gap">
-          <button id="resume-btn" class="btn primary">Resume</button>
-          <button id="discard-btn" class="btn ghost">Discard</button>
+          <button type="button" id="resume-btn" class="btn primary">Resume</button>
+          <button type="button" id="discard-btn" class="btn">Discard</button>
         </div>
       </div>
 
       <div class="card">
         <h2>Exam settings</h2>
-        <div class="field">
-          <label for="count">Number of questions</label>
-          <select id="count">
-            <option value="10">10 (quick check)</option>
-            <option value="25">25</option>
-            <option value="40" selected>40</option>
-            <option value="all">All available</option>
-          </select>
+        <div class="settings-grid">
+          <div class="field">
+            <label for="count">Number of questions</label>
+            <select id="count">
+              <option value="10">10 (quick check)</option>
+              <option value="25">25</option>
+              <option value="40" selected>40</option>
+              <option value="all">All available</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="time">Time limit</label>
+            <select id="time">
+              <option value="0">No limit</option>
+              <option value="15">15 minutes</option>
+              <option value="30">30 minutes</option>
+              <option value="60" selected>60 minutes</option>
+              <option value="90">90 minutes</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="pass">Pass mark (%)</label>
+            <input id="pass" type="number" min="1" max="100" value="70" aria-describedby="pass-hint">
+          </div>
         </div>
-        <div class="field">
-          <label for="time">Time limit</label>
-          <select id="time">
-            <option value="0">No limit</option>
-            <option value="15">15 minutes</option>
-            <option value="30">30 minutes</option>
-            <option value="60" selected>60 minutes</option>
-            <option value="90">90 minutes</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="pass">Pass mark (%)</label>
-          <input id="pass" type="number" min="1" max="100" value="70">
-          <span class="hint">Practice target only; check the official pass mark.</span>
-        </div>
+        <p id="pass-hint" class="hint">The pass mark is a practice target. Check the official one for your exam.</p>
+
         <fieldset class="field">
           <legend>Topics</legend>
           <div id="topic-list" class="topic-list"></div>
@@ -68,17 +74,21 @@
         <div class="field checkbox-row">
           <label><input type="checkbox" id="shuffle-opts" checked> Shuffle answer options</label>
         </div>
-        <p id="setup-error" class="error hidden"></p>
-        <button id="start-btn" class="btn primary big">Start exam</button>
+        <p id="setup-error" class="error hidden" role="alert"></p>
+        <button type="button" id="start-btn" class="btn primary big">Start exam</button>
       </div>
 
-      <div id="history" class="card hidden">
-        <h2>Recent attempts</h2>
-        <p class="muted small">Your last 10 exams. Click <strong>Review</strong> to see every question and answer.</p>
-        <table class="table">
-          <thead><tr><th>Date</th><th>Questions</th><th>Score</th><th>Result</th><th></th></tr></thead>
-          <tbody id="history-body"></tbody>
-        </table>
+      <div id="recent" class="card hidden">
+        <div class="card-head">
+          <h2>Recent attempts</h2>
+          <button type="button" class="link" data-view="history">See all history</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Date</th><th>Type</th><th>Score</th><th>Result</th><th aria-label="Actions"></th></tr></thead>
+            <tbody id="recent-body"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -90,34 +100,36 @@
             <span id="q-counter"></span>
             <span id="q-topic" class="pill"></span>
           </div>
-          <div class="progress"><div id="progress-bar"></div></div>
+          <div class="progress" aria-hidden="true"><div id="progress-bar"></div></div>
 
           <div class="card question-card">
-            <p id="q-text" class="q-text"></p>
+            <p id="q-text" class="q-text" tabindex="-1"></p>
             <pre id="q-code" class="code hidden"></pre>
             <p id="q-instruction" class="instruction"></p>
-            <div id="options" class="options" role="group"></div>
+            <div id="options" class="options" role="group" aria-labelledby="q-text"></div>
             <div id="explanation" class="explanation hidden"></div>
           </div>
 
           <div class="controls">
-            <button id="prev-btn" class="btn">← Previous</button>
-            <button id="flag-btn" class="btn ghost">⚑ Flag</button>
-            <button id="show-btn" class="btn ghost">Show answer</button>
-            <button id="next-btn" class="btn primary">Next →</button>
+            <button type="button" id="prev-btn" class="btn">Previous</button>
+            <button type="button" id="flag-btn" class="btn" aria-pressed="false">Flag</button>
+            <button type="button" id="show-btn" class="btn">Show answer</button>
+            <button type="button" id="next-btn" class="btn primary">Next</button>
           </div>
+          <p class="muted small keys">Keys: ← → move between questions, 1–9 pick an option, F flags.</p>
         </div>
 
         <aside class="exam-side">
           <div class="card">
-            <h3>Questions</h3>
+            <h2>Answer sheet</h2>
             <div id="navigator" class="navigator"></div>
             <ul class="legend">
               <li><span class="dot answered"></span>Answered</li>
               <li><span class="dot flagged"></span>Flagged</li>
               <li><span class="dot assisted"></span>Answer shown</li>
             </ul>
-            <button id="finish-btn" class="btn danger full">Finish exam</button>
+            <button type="button" id="finish-btn" class="btn primary full">Finish exam</button>
+            <button type="button" id="exit-btn" class="btn full">Save and exit</button>
           </div>
         </aside>
       </div>
@@ -125,52 +137,119 @@
 
     <!-- Results screen -->
     <section id="results" class="screen hidden">
-      <div class="card result-hero">
-        <div id="result-badge" class="badge"></div>
-        <div class="score-big" id="score-big"></div>
-        <div id="score-detail" class="muted"></div>
+      <div class="card result">
+        <div class="result-top">
+          <div>
+            <h1 id="result-verdict" class="verdict" tabindex="-1"></h1>
+            <p id="score-detail" class="muted"></p>
+          </div>
+          <div id="score-big" class="score-big"></div>
+        </div>
+        <div class="meter" aria-hidden="true">
+          <div id="meter-fill" class="meter-fill"></div>
+          <div id="meter-mark" class="meter-mark"><span id="meter-label"></span></div>
+        </div>
       </div>
 
       <div class="stats" id="stats"></div>
 
       <div class="card">
         <h2>Score by topic</h2>
-        <table class="table">
-          <thead><tr><th>Topic</th><th>Correct</th><th class="bar-col">Score</th></tr></thead>
-          <tbody id="topic-body"></tbody>
-        </table>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Topic</th><th>Correct</th><th class="bar-col">Score</th></tr></thead>
+            <tbody id="topic-body"></tbody>
+          </table>
+        </div>
         <p class="muted small" id="weak-note"></p>
       </div>
 
       <div class="card">
-        <div class="review-head">
+        <div class="card-head">
           <h2>Review answers</h2>
-          <div class="filters" role="tablist">
-            <button class="chip active" data-filter="all">All</button>
-            <button class="chip" data-filter="wrong">Incorrect</button>
-            <button class="chip" data-filter="assisted">Answer shown</button>
-            <button class="chip" data-filter="flagged">Flagged</button>
+          <div class="filters" role="group" aria-label="Filter questions">
+            <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+            <button type="button" class="chip" data-filter="wrong" aria-pressed="false">Incorrect</button>
+            <button type="button" class="chip" data-filter="assisted" aria-pressed="false">Answer shown</button>
+            <button type="button" class="chip" data-filter="flagged" aria-pressed="false">Flagged</button>
           </div>
         </div>
         <div id="review-list"></div>
       </div>
 
       <div class="controls center">
-        <button id="retry-wrong-btn" class="btn">Retake incorrect questions</button>
-        <button id="new-btn" class="btn primary">New exam</button>
+        <button type="button" id="back-history-btn" class="btn hidden" data-view="history">Back to history</button>
+        <button type="button" id="retry-wrong-btn" class="btn">Retake incorrect questions</button>
+        <button type="button" id="new-btn" class="btn primary" data-view="setup">New exam</button>
+      </div>
+    </section>
+
+    <!-- History screen -->
+    <section id="history" class="screen hidden">
+      <div class="page-head">
+        <h1>History</h1>
+        <div class="row-gap">
+          <button type="button" id="export-btn" class="btn">Export</button>
+          <button type="button" id="import-btn" class="btn">Import</button>
+          <input id="import-file" type="file" accept="application/json,.json" class="hidden">
+          <button type="button" id="clear-btn" class="btn danger">Clear all</button>
+        </div>
+      </div>
+      <p id="history-msg" class="notice hidden" role="status"></p>
+
+      <div id="history-empty" class="card empty hidden">
+        <p>No attempts yet. Finish an exam and it appears here with every question and answer.</p>
+        <button type="button" class="btn primary" data-view="setup">Set up an exam</button>
+      </div>
+
+      <div id="history-content">
+        <div class="stats" id="history-stats"></div>
+
+        <div class="card" id="trend-card">
+          <h2>Score trend</h2>
+          <div id="trend" class="trend"></div>
+          <p class="muted small" id="trend-note"></p>
+        </div>
+
+        <div class="card" id="history-topics-card">
+          <h2>Accuracy by topic</h2>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Topic</th><th>Correct</th><th class="bar-col">Accuracy</th></tr></thead>
+              <tbody id="history-topic-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="missed-card">
+          <div class="card-head">
+            <h2>Questions you miss most</h2>
+            <button type="button" id="missed-btn" class="btn small">Practice these</button>
+          </div>
+          <ol id="missed-list" class="missed"></ol>
+        </div>
+
+        <div class="card">
+          <h2>All attempts</h2>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Date</th><th>Type</th><th>Score</th><th>Without help</th><th>Time</th><th>Result</th><th aria-label="Actions"></th></tr></thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+          <p class="muted small" id="history-note"></p>
+        </div>
       </div>
     </section>
   </main>
 
-  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-box">
-      <p id="modal-text"></p>
-      <div class="row-gap right">
-        <button id="modal-cancel" class="btn ghost">Keep going</button>
-        <button id="modal-ok" class="btn danger">Finish now</button>
-      </div>
+  <dialog id="dialog" class="dialog" aria-labelledby="dialog-text">
+    <p id="dialog-text"></p>
+    <div class="row-gap right">
+      <button type="button" id="dialog-cancel" class="btn">Cancel</button>
+      <button type="button" id="dialog-ok" class="btn primary">OK</button>
     </div>
-  </div>
+  </dialog>
 
   <script src="questions.js"></script>
   <script src="app.js"></script>

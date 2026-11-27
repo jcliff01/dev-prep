@@ -13,10 +13,21 @@ A practice test for a developer certification exam. It runs entirely in the brow
 - Questions are drawn evenly across topics, and the answer options are shuffled.
 - **Show answer** reveals the correct option(s) and an explanation. Questions you got help on are tracked, and your results show your score both with and without help.
 - **Flag** questions to come back to, and use the question grid to jump around.
-- Results show pass/fail, your score by topic, which topics to focus on, and a full review you can filter (incorrect, answer shown, flagged).
+- Results show pass/fail, your score against the pass mark, your score by topic, which topics to focus on, and a full review you can filter (incorrect, answer shown, flagged).
 - **Retake incorrect questions** starts a new exam from just the ones you missed.
-- Progress is saved in the browser, so you can close the tab and resume later. Your last 10 exams are kept on the start screen; click **Review** on any of them to reopen its results and full answer review.
-- Keyboard: ← / → to move between questions, 1–9 to pick an option.
+- Progress is saved in the browser. **Save and exit** leaves an exam part-way and you can resume it later (a time limit keeps counting).
+- Keyboard: ← / → to move between questions, 1–9 to pick an option, F to flag.
+- Follows your system's light or dark theme.
+
+## History
+
+The **History** page keeps your last 50 attempts in the browser:
+
+- Exams taken, average score, best score and how many you passed.
+- A score trend across your full exams, and your accuracy by topic added up over all of them.
+- **Questions you miss most**, with a button to practise just those.
+- **Review** reopens any attempt with every question, your answer and the explanation. **Delete** removes one attempt.
+- **Export** downloads your history as a JSON file and **Import** merges one back in, so you can move it between browsers (a local `index.html` and the GitHub Pages site keep separate history).
 
 ## Topics
 
