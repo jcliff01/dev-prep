@@ -5,9 +5,10 @@
   const TOPICS = window.TOPICS || [];
   const BY_ID = Object.fromEntries(QUESTIONS.map((q) => [q.id, q]));
 
-  const STATE_KEY = "dev-prep-state-v1";
-  const HISTORY_KEY = "dev-prep-history-v1";
-  const SETTINGS_KEY = "dev-prep-settings-v1";
+  const APP = "dev-prep"; // names this simulator's saved data and export files
+  const STATE_KEY = `${APP}-state-v1`;
+  const HISTORY_KEY = `${APP}-history-v1`;
+  const SETTINGS_KEY = `${APP}-settings-v1`;
   const HISTORY_MAX = 50; // attempts kept in the browser
   const RECENT_MAX = 5;   // attempts listed on the start screen
   const TREND_MAX = 20;   // bars in the score trend
@@ -706,11 +707,11 @@
   }
 
   function exportHistory() {
-    const data = { app: "dev-prep", version: 1, exported: new Date().toISOString(), attempts: attempts.map(({ reviewable, ...rest }) => rest) };
+    const data = { app: APP, version: 1, exported: new Date().toISOString(), attempts: attempts.map(({ reviewable, ...rest }) => rest) };
     const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = `dev-prep-history-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `${APP}-history-${new Date().toISOString().slice(0, 10)}.json`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -724,9 +725,10 @@
       let list;
       try {
         const data = JSON.parse(reader.result);
-        list = Array.isArray(data) ? data : data && data.attempts;
+        const foreign = data && data.app && data.app !== APP; // an export from a different simulator
+        list = Array.isArray(data) ? data : !foreign && data && data.attempts;
       } catch (e) { /* handled below */ }
-      if (!Array.isArray(list)) return renderHistory("That file is not a dev-prep history export.");
+      if (!Array.isArray(list)) return renderHistory(`That file is not a ${APP} history export.`);
       loadAttempts();
       const before = new Set(attempts.map((a) => a.id));
       attempts = tidyAttempts([...attempts, ...list]);
